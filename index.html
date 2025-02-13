@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Country from its Currency</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #currency-container { margin: 20px auto; font-size: 24px; font-weight: bold; }
+        #result { font-weight: bold; margin: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Guess the Country from its Currency</h1>
+    <div id="currency-container"></div>
+    <div id="options"></div>
+    <p id="result"></p>
+    <button onclick="nextCurrency()">Next</button>
+    <button onclick="exitGame()">Exit</button>
+    
+    <script>
+        const countries = [
+            { name: "Argentina", currency: "Peso", symbol: "$" },
+            { name: "Brazil", currency: "Real", symbol: "R$" },
+            { name: "Canada", currency: "Canadian Dollar", symbol: "$" },
+            { name: "China", currency: "Yuan", symbol: "¥" },
+            { name: "France", currency: "Euro", symbol: "€" },
+            { name: "Germany", currency: "Euro", symbol: "€" },
+            { name: "India", currency: "Rupee", symbol: "₹" },
+            { name: "Italy", currency: "Euro", symbol: "€" },
+            { name: "Japan", currency: "Yen", symbol: "¥" },
+            { name: "Mexico", currency: "Peso", symbol: "$" }
+        ];
+
+        let currentCountry;
+
+        function loadCurrency() {
+            currentCountry = countries[Math.floor(Math.random() * countries.length)];
+            document.getElementById("currency-container").textContent = `Currency: ${currentCountry.currency} (${currentCountry.symbol})`;
+            document.getElementById("result").textContent = "";
+            generateOptions();
+        }
+
+        function generateOptions() {
+            let options = [currentCountry.name];
+            while (options.length < 3) {
+                let randomCountry = countries[Math.floor(Math.random() * countries.length)].name;
+                if (!options.includes(randomCountry)) {
+                    options.push(randomCountry);
+                }
+            }
+            options.sort(() => Math.random() - 0.5);
+            document.getElementById("options").innerHTML = options.map(option => 
+                `<button onclick="checkGuess('${option}')">${option}</button>`
+            ).join(" ");
+        }
+
+        function checkGuess(selected) {
+            if (selected === currentCountry.name) {
+                document.getElementById("result").textContent = "Correct!";
+            } else {
+                document.getElementById("result").textContent = `Wrong! The correct answer was ${currentCountry.name}.`;
+            }
+        }
+
+        function nextCurrency() {
+            loadCurrency();
+        }
+
+        function exitGame() {
+            document.getElementById("currency-container").innerHTML = "<h2>Game Over</h2>";
+            document.getElementById("options").style.display = "none";
+            document.querySelector("button").style.display = "none";
+        }
+
+        loadCurrency();
+    </script>
+</body>
+</html>
